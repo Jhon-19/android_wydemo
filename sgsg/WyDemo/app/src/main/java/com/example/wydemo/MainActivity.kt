@@ -4,10 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.me_fragment.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         //绑定点击事件 改变 fragment
         home.setOnClickListener {
             if (homeText.currentTextColor != getResources().getColor(R.color.teal_200)) {
-                Log.d("sgsg", "change")
+//                Log.d("sgsg", "change")
                 replaceFragment(HomeFragment())
                 homeImage.setImageResource(R.drawable.home_clicked)
                 meImage.setImageResource(R.drawable.me)
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         }
         me.setOnClickListener {
             if (meText.currentTextColor != getResources().getColor(R.color.teal_200)) {
-                Log.d("sgsg", "change")
+//                Log.d("sgsg", "change")
                 replaceFragment(MeFragment())
                 homeImage.setImageResource(R.drawable.home)
                 meImage.setImageResource(R.drawable.me_clicked)
@@ -39,10 +38,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         addBtn.setOnClickListener {
-            // TODO: 2022/1/22 跳到发布页面
-            val intent = Intent(this, Publish::class.java)
+            // 跳到发布页面
+            val intent = Intent(this, PublishActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     private fun replaceFragment(fragment: Fragment) {
