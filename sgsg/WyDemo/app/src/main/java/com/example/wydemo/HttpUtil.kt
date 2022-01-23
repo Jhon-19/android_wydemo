@@ -33,8 +33,43 @@ object HttpUtil {
         }
         client.newCall(request).enqueue(callback)
     }
-
 }
+
+object HttpUtilOnMainThread {
+    private val rootAddress = "http://www.involute.cn:8886/wy"
+
+    fun sendRequestWithOkHttp(
+        relaAddress: String,
+        args: HashMap<String, String>,
+        callback: okhttp3.Callback,
+    ) {
+        try {
+            val client = OkHttpClient()
+            val request = if (args.size > 0) {
+                var requestBodyBuilder = FormBody.Builder()
+                for ((key, value) in args) {
+                    requestBodyBuilder.add(key, value)
+                }
+                val requestBody = requestBodyBuilder.build()
+
+                Request.Builder().url(HttpUtilOnMainThread.rootAddress + relaAddress)
+                    .post(requestBody)
+                    .build()
+            } else {
+                Request.Builder().url(HttpUtilOnMainThread.rootAddress + relaAddress).build()
+            }
+            val response = client.newCall(request).execute()
+            val responseData = response.body()?.string()
+            if (responseData != null) {
+//                showResponse(responseData)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+}
+
 //HttpUtil.sendRequestWithOkHttp(address, object : Callback {
 //    override fun onResponse(call: Call, response: Response) {
 //        val responseData = response.body?.string()

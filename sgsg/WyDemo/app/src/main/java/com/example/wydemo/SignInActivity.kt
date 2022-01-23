@@ -3,11 +3,13 @@ package com.example.wydemo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.android.synthetic.main.activity_sign_up.account
-import kotlinx.android.synthetic.main.activity_sign_up.password
 import kotlinx.android.synthetic.main.activity_sign_up.signUpBtn
 import okhttp3.Call
 import okhttp3.Callback
@@ -17,6 +19,7 @@ import java.io.IOException
 import java.lang.Exception
 
 class SignInActivity : AppCompatActivity() {
+    private var show = false
     private val relaAddress = "/user/account/login"
     private val args = HashMap<String, String>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +50,22 @@ class SignInActivity : AppCompatActivity() {
                     }
                 })
             } else Toast.makeText(this, "输入不能为空", Toast.LENGTH_SHORT).show()
+        }
+        //密码
+        showPwd.setOnClickListener {
+            if (!show) {
+                //明文
+                password.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                password.setSelection(password.text.length)
+                showPwd.setImageResource(R.drawable.eye_clicked)
+                show = true
+            } else {
+                //密文
+                password.transformationMethod = PasswordTransformationMethod.getInstance()
+                password.setSelection(password.text.length)
+                showPwd.setImageResource(R.drawable.eye)
+                show = false
+            }
         }
     }
 

@@ -21,9 +21,8 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
             android:gravity="center"
             android:text="账号: "
             android:textSize="24dp" />
@@ -32,7 +31,7 @@
             android:id="@+id/account"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="1"
             android:hint="请输入账号"
             android:maxLines="1" />
     </LinearLayout>
@@ -43,9 +42,8 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
             android:gravity="center"
             android:text="密码: "
             android:textSize="24dp" />
@@ -54,9 +52,17 @@
             android:id="@+id/password"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="1"
             android:hint="请输入密码"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:password="true"
+            tools:ignore="Deprecated" />
+
+        <ImageButton
+            android:id="@+id/showPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/eye" />
     </LinearLayout>
 
     <Button
