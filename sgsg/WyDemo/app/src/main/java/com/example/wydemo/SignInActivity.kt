@@ -2,6 +2,7 @@ package com.example.wydemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -64,6 +65,7 @@ class SignInActivity : AppCompatActivity() {
             User.pwd = jsonObj2.getString("userPassword")
             User.certification = if (jsonObj2.getString("certification") == "1") true else false
             User.creditLevel = jsonObj2.getString("creditLevel").toInt()
+            User.saveUserDataWithSharedPreferences(applicationContext)
             runOnUiThread { Toast.makeText(applicationContext, "登录成功", Toast.LENGTH_SHORT).show() }
             return true
         } catch (e: Exception) {

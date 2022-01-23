@@ -8,15 +8,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.me_fragment.*
 import kotlinx.android.synthetic.main.me_fragment.view.*
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.OutputStreamWriter
+import android.widget.Toast
+
+import android.content.DialogInterface
+
 
 class MeFragment : Fragment() {
-    private lateinit var userInfo: TextView
+    private lateinit var title: TextView
+
+    private lateinit var signBtn: LinearLayout
     private lateinit var signUp: Button
     private lateinit var signIn: Button
+
+    private lateinit var userInfo: LinearLayout
+    private lateinit var userAccount: TextView
+    private lateinit var userCreditLevel: TextView
+    private lateinit var userCertification: TextView
+
+    private lateinit var exitBtn: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -32,22 +50,57 @@ class MeFragment : Fragment() {
             val intent = Intent(activity, SignInActivity::class.java)
             startActivity(intent)
         }
+        exitBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(view.context)
+            builder.setTitle("提示框")
+            builder.setMessage("确定退出登录吗?")
+            builder.setPositiveButton("确定") { dialog, which ->
+                User.signIn = false
+                activity?.let { it1 -> User.saveUserDataWithSharedPreferences(it1) }
+                Toast.makeText(view.context, "退出登录", Toast.LENGTH_SHORT).show()
+                refreshView()
+            }
+            builder.setNegativeButton("取消") { dialog, which ->
+                Toast.makeText(view.context, "取消退出登录", Toast.LENGTH_SHORT).show()
+            }
+            builder.show()
+        }
         return view
     }
 
     private fun initViews(view: View) {
-        userInfo = view.userInfo
+        title = view.title
+
+        signBtn = view.signBtn
         signUp = view.signUp
         signIn = view.signIn
+
+        userInfo = view.userInfo
+        userAccount = view.userAccount
+        userCertification = view.userCertification
+        userCreditLevel = view.userCreditLevel
+
+        exitBtn = view.exitBtn
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("sgsg", "resume")
+        refreshView()
+    }
+
+    private fun refreshView() {
         if (User.signIn) {
-            userInfo.setText("账号: ${User.id}\n" +
-                    "信用等级: ${User.creditLevel}\n" +
-                    "是否认证: ${if (User.certification) "是" else "否"}")
+            signBtn.visibility = View.GONE
+            userInfo.visibility = View.VISIBLE
+            exitBtn.visibility = View.VISIBLE
+            userAccount.setText("账号: ${User.id}")
+            userCreditLevel.setText("信用等级: ${User.creditLevel}")
+            userCertification.setText("是否认证:${if (User.certification) "是" else "否"}")
+        } else {
+            signBtn.visibility = View.VISIBLE
+            userInfo.visibility = View.GONE
+            exitBtn.visibility = View.GONE
         }
     }
+
 }

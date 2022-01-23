@@ -64,6 +64,7 @@ class SignUpActivity : AppCompatActivity() {
             User.pwd = jsonObj2.getString("userPassword")
             User.certification = if (jsonObj2.getString("certification") == "1") true else false
             User.creditLevel = jsonObj2.getString("creditLevel").toInt()
+            User.saveUserDataWithSharedPreferences(applicationContext)
             runOnUiThread { Toast.makeText(applicationContext, "注册成功", Toast.LENGTH_SHORT).show() }
             return true
         } catch (e: Exception) {

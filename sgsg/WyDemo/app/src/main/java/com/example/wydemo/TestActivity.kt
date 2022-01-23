@@ -1,5 +1,6 @@
 package com.example.wydemo
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,21 +14,29 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
-        val address = "http://192.168.0.107/get_data.json"
-        val args = HashMap<String, String>()
-        testBtn.setOnClickListener {
-            HttpUtil.sendRequestWithOkHttp(address, args, object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    Log.d("sgsg", "test")
-                    val responseData = response.body()?.string()
-                    // TODO: 2022/1/15
-                    if (responseData != null) Log.d("sgsg", responseData)
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    TODO("Not yet implemented")
-                }
-            })
+        testBtn1.setOnClickListener {
+            save()
         }
+        testBtn2.setOnClickListener {
+            load()
+        }
+    }
+
+    private fun save() {
+        val editor = getSharedPreferences("data", Context.MODE_PRIVATE).edit()
+        editor.putString("name", "Tom")
+        editor.putInt("age", 28)
+        editor.putBoolean("married", false)
+        editor.apply()
+    }
+
+    private fun load() {
+        val data = getSharedPreferences("data", Context.MODE_PRIVATE)
+        val name = data.getString("name", "")
+        val age = data.getInt("age", 0)
+        val married = data.getBoolean("married", false)
+        Log.d("sgsg", "name is $name")
+        Log.d("sgsg", "age is $age")
+        Log.d("sgsg", "married is $married")
     }
 }
