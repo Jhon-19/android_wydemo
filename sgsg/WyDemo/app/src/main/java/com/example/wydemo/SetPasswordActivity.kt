@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.activity_sign_in.view.*
@@ -22,6 +23,9 @@ class SetPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_password)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+        }
         showPwd1.setOnClickListener {
             if (!show1) {
                 //明文
@@ -65,6 +69,13 @@ class SetPasswordActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return true
+    }
+
     private fun register(pwd: String) {
         args.clear()
         if (User.id != null) args["openid"] = User.id!!
@@ -96,14 +107,6 @@ class SetPasswordActivity : AppCompatActivity() {
                 runOnUiThread { Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show() }
                 return false
             }
-            User.signIn = true
-            val data = jsonObj.getString("data")
-            val jsonObj2 = JSONObject(data)
-            User.id = jsonObj2.getString("userOpenid")
-            User.pwd = jsonObj2.getString("userPassword")
-            User.certification = if (jsonObj2.getString("certification") == "1") true else false
-            User.creditLevel = jsonObj2.getString("creditLevel").toInt()
-            User.saveUserDataWithSharedPreferences(applicationContext)
             runOnUiThread { Toast.makeText(applicationContext, "注册成功", Toast.LENGTH_SHORT).show() }
             return true
         } catch (e: Exception) {

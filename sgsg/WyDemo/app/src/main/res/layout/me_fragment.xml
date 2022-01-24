@@ -3,11 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/teal_200"
+        android:title="@string/app_name"
+        android:titleTextColor="@color/white"/>
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/toolbar"
         android:gravity="center"
         android:text="me"
         android:textSize="24dp" />
@@ -41,6 +50,12 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/userId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24dp" />
+
+        <TextView
             android:id="@+id/userAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,10 +75,18 @@
 
     </LinearLayout>
 
+
     <Button
         android:id="@+id/exitBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/userInfo"
         android:text="退出登录" />
+
+    <Button
+        android:id="@+id/proveBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/exitBtn"
+        android:text="学生认证" />
 </RelativeLayout>

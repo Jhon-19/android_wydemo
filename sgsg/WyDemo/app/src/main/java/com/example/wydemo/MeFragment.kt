@@ -32,8 +32,10 @@ class MeFragment : Fragment() {
     private lateinit var userAccount: TextView
     private lateinit var userCreditLevel: TextView
     private lateinit var userCertification: TextView
+    private lateinit var userId: TextView
 
     private lateinit var exitBtn: Button
+    private lateinit var proveBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +67,10 @@ class MeFragment : Fragment() {
             }
             builder.show()
         }
+        proveBtn.setOnClickListener {
+            val intent = Intent(activity, AnswerProveActivity::class.java)
+            startActivity(intent)
+        }
         return view
     }
 
@@ -76,11 +82,13 @@ class MeFragment : Fragment() {
         signIn = view.signIn
 
         userInfo = view.userInfo
+        userId = view.userId
         userAccount = view.userAccount
         userCertification = view.userCertification
         userCreditLevel = view.userCreditLevel
 
         exitBtn = view.exitBtn
+        proveBtn = view.proveBtn
     }
 
     override fun onResume() {
@@ -93,13 +101,19 @@ class MeFragment : Fragment() {
             signBtn.visibility = View.GONE
             userInfo.visibility = View.VISIBLE
             exitBtn.visibility = View.VISIBLE
+            userId.setText("id: ${User.userId}")
             userAccount.setText("账号: ${User.id}")
             userCreditLevel.setText("信用等级: ${User.creditLevel}")
-            userCertification.setText("是否认证:${if (User.certification) "是" else "否"}")
+            userCertification.setText("认证信息:${if (User.certification) "武汉大学" else "未认证"}")
         } else {
             signBtn.visibility = View.VISIBLE
             userInfo.visibility = View.GONE
             exitBtn.visibility = View.GONE
+        }
+        if (User.certification) {
+            proveBtn.visibility = View.GONE
+        } else {
+            proveBtn.visibility = View.VISIBLE
         }
     }
 

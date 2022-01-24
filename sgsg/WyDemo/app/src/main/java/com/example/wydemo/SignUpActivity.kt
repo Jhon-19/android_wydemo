@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -25,6 +26,10 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
         //初始化
+        //home键
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+        }
         //new倒计时对象,总共的时间,每隔多少秒更新一次时间
         myCountDownTimer = MyCountDownTimer(timerBtn, 60000, 1000)
         //注册逻辑
@@ -108,6 +113,13 @@ class SignUpActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return true
     }
 
     private fun isMobilePhone(s: String?): Boolean {

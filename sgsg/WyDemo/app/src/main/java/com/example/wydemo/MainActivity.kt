@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.me_fragment.*
@@ -43,12 +44,13 @@ class MainActivity : AppCompatActivity() {
                 meText.setTextColor(getResources().getColor(R.color.teal_200))
             }
         }
+        // 跳到发布页面
         addBtn.setOnClickListener {
-            // 跳到发布页面
             val intent = Intent(this, PublishActivity::class.java)
             startActivity(intent)
         }
     }
+
 
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager

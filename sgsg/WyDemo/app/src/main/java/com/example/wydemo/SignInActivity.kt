@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
@@ -25,6 +26,9 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+        }
         //登录逻辑
         signInBtn.setOnClickListener {
             val accountInput = account.text.toString()
@@ -69,6 +73,13 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return true
+    }
+
     private fun parseJSONWithJSONObject(jsonData: String): Boolean {
         try {
             val jsonObj = JSONObject(jsonData)
@@ -80,6 +91,7 @@ class SignInActivity : AppCompatActivity() {
             User.signIn = true
             val data = jsonObj.getString("data")
             val jsonObj2 = JSONObject(data)
+            User.userId=jsonObj2.getString("userId").toInt()
             User.id = jsonObj2.getString("userOpenid")
             User.pwd = jsonObj2.getString("userPassword")
             User.certification = if (jsonObj2.getString("certification") == "1") true else false

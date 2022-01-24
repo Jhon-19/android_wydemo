@@ -10,6 +10,7 @@ object User {
 
     var signIn: Boolean = false
     var id: String? = "xxx"
+    var userId: Int = 0
     var pwd: String? = "xxx"
     var certification: Boolean = false
     var creditLevel: Int = 1
@@ -21,6 +22,7 @@ object User {
         editor.putString("password", User.pwd)
         editor.putBoolean("certification", User.certification)
         editor.putInt("creditLevel", User.creditLevel)
+        editor.putInt("userId", User.userId)
         editor.apply()
     }
 
@@ -31,6 +33,7 @@ object User {
         User.pwd = data.getString("password", "")
         User.certification = data.getBoolean("certification", false)
         User.creditLevel = data.getInt("creditLevel", 1)
+        User.userId = data.getInt("userId", 0)
     }
 
     fun saveUserDataWithFile(context: Context) {
