@@ -64,7 +64,7 @@ class SignUpActivity : AppCompatActivity() {
         args["openid"] = accountInput
         HttpUtil.sendRequestWithOkHttp(relaAddress, args, object : Callback {
             override fun onResponse(call: Call, response: Response) {
-                Log.d("sgsg", "发送请求成功")
+//                Log.d("sgsg", "发送请求成功")
                 val responseData: String? = response.body()?.string()
                 if (responseData != null) {
 //                    Log.d("sgsg", responseData)

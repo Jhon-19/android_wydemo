@@ -22,24 +22,9 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
 
-        val banner: Banner<DataBean, BannerImageAdapter<DataBean>> = findViewById(R.id.banner)
-
-        banner
-            .setAdapter(object : BannerImageAdapter<DataBean>(DataBean.testData3) {
-                override fun onBindView(
-                    holder: BannerImageHolder,
-                    data: DataBean,
-                    position: Int,
-                    size: Int,
-                ) {
-                    //图片加载自己实现
-                    Glide.with(holder.itemView)
-                        .load(data.imageUrl)
-                        .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
-                        .into(holder.imageView)
-                }
-            })
-            .addBannerLifecycleObserver(this).setIndicator(CircleIndicator(this))
+        testBtn1.setOnClickListener {
+            InformationInSchool.init()
+        }
 
     }
 }

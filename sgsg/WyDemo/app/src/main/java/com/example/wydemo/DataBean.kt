@@ -20,7 +20,6 @@ class DataBean {
 
     companion object {
 
-
         //测试数据，如果图片链接失效请更换
         val testData3: List<DataBean>
             get() {
