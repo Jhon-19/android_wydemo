@@ -13,6 +13,12 @@
         android:theme="@style/Theme.WyDemo"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".MessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".AnswerProveActivity"
             android:exported="false" />
         <activity

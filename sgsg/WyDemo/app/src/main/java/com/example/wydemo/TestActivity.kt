@@ -4,6 +4,13 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.youth.banner.Banner
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.holder.BannerImageHolder
+import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.activity_test.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -14,29 +21,25 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
-        testBtn1.setOnClickListener {
-            save()
-        }
-        testBtn2.setOnClickListener {
-            load()
-        }
-    }
 
-    private fun save() {
-        val editor = getSharedPreferences("data", Context.MODE_PRIVATE).edit()
-        editor.putString("name", "Tom")
-        editor.putInt("age", 28)
-        editor.putBoolean("married", false)
-        editor.apply()
-    }
+        val banner: Banner<DataBean, BannerImageAdapter<DataBean>> = findViewById(R.id.banner)
 
-    private fun load() {
-        val data = getSharedPreferences("data", Context.MODE_PRIVATE)
-        val name = data.getString("name", "")
-        val age = data.getInt("age", 0)
-        val married = data.getBoolean("married", false)
-        Log.d("sgsg", "name is $name")
-        Log.d("sgsg", "age is $age")
-        Log.d("sgsg", "married is $married")
+        banner
+            .setAdapter(object : BannerImageAdapter<DataBean>(DataBean.testData3) {
+                override fun onBindView(
+                    holder: BannerImageHolder,
+                    data: DataBean,
+                    position: Int,
+                    size: Int,
+                ) {
+                    //图片加载自己实现
+                    Glide.with(holder.itemView)
+                        .load(data.imageUrl)
+                        .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
+                        .into(holder.imageView)
+                }
+            })
+            .addBannerLifecycleObserver(this).setIndicator(CircleIndicator(this))
+
     }
 }

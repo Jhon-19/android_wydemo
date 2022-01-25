@@ -1,76 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
+    <Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:contentScrim="@color/teal_200"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <ImageView
-                android:id="@+id/fruitImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/teal_200"
+        android:titleTextColor="@color/white">
 
         <LinearLayout
+            android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="20">
+
+                <Spinner
+                    android:id="@+id/schools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/down_origin"
+                    android:prompt="@string/prompt"
+                    android:spinnerMode="dialog" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/search"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="15dp"
-                app:cardCornerRadius="4dp">
+                android:layout_gravity="center_vertical"
+                android:layout_weight="70">
 
-                <TextView
-                    android:id="@+id/fruitContentText"
+                <ImageView
+                    android:id="@+id/search1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/search3" />
+
+                <ImageView
+                    android:id="@+id/search2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/search2" />
 
 
-            </com.google.android.material.card.MaterialCardView>
+            </RelativeLayout>
 
+            <ImageButton
+                android:id="@+id/msg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="10"
+                android:background="@color/teal_200"
+                android:src="@drawable/msg" />
 
         </LinearLayout>
+    </Toolbar>
+
+    <com.youth.banner.Banner
+        android:id="@+id/rotationMap"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_below="@id/toolbar" />
 
 
-    </androidx.core.widget.NestedScrollView>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>
