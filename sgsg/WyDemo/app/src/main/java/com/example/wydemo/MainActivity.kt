@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
         // 跳到发布页面
         addBtn.setOnClickListener {
-            val intent = Intent(this, TestActivity::class.java)
+            val intent = Intent(this, InfosInSchoolActivity::class.java)
             startActivity(intent)
         }
     }

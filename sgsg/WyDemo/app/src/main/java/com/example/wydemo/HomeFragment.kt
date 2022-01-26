@@ -1,7 +1,9 @@
 package com.example.wydemo
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_test.view.*
 
 
 class HomeFragment : Fragment() {
+    private lateinit var refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
     private lateinit var toolbar: Toolbar
     private lateinit var search: RelativeLayout
     private lateinit var msg: ImageButton
@@ -37,6 +41,9 @@ class HomeFragment : Fragment() {
     private lateinit var func7: LinearLayout
     private lateinit var func8: LinearLayout
 
+    private lateinit var realTimeInfo: TextView
+    private lateinit var realTimeInfoContentText: TextView
+
     private val schoolList = ArrayList<String>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +53,35 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
         initView(view)
         initSchools()
+
+        //初始化校内资讯数据
+        InformationInSchool.init(object : InformationInSchoolDataCallBack {
+            override fun onFinish(response: ArrayList<InformationInSchool>) {
+                if (response.size >= 1) {
+                    activity?.runOnUiThread {
+                        realTimeInfoContentText.setText("${response[0].time}  ${response[0].title}")
+                        realTimeInfoContentText.setOnClickListener {
+                            //Log.d("sgsg", "打开链接")
+                            val uri: Uri = Uri.parse(response[0].url)
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                            startActivity(intent)
+                        }
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+
+        //下拉刷新
+        refresh.setColorSchemeResources(R.color.teal_200)
+        refresh.setOnRefreshListener {
+            refresh()
+        }
+
 
         //轮播图
         rotationMap.setAdapter(object : BannerImageAdapter<DataBean>(DataBean.testData3) {
@@ -100,40 +136,72 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
         //功能入口
-        func1.setOnClickListener{
+        func1.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func2.setOnClickListener{
+        func2.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func3.setOnClickListener{
+        func3.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func4.setOnClickListener{
+        func4.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func5.setOnClickListener{
+        func5.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func6.setOnClickListener{
+        func6.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func7.setOnClickListener{
+        func7.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
-        func8.setOnClickListener{
+        func8.setOnClickListener {
             val intent = Intent(activity, TestActivity::class.java)
             startActivity(intent)
         }
+
+        realTimeInfo.setOnClickListener {
+            val intent = Intent(activity, InfosInSchoolActivity::class.java)
+            startActivity(intent)
+        }
+
         return view
     }
+
+
+    private fun refresh() {
+        InformationInSchool.init(object : InformationInSchoolDataCallBack {
+            override fun onFinish(response: ArrayList<InformationInSchool>) {
+                if (response.size >= 1) {
+                    activity?.runOnUiThread {
+                        realTimeInfoContentText.setText("${response[0].time}  ${response[0].title}")
+                        realTimeInfoContentText.setOnClickListener {
+                            //Log.d("sgsg", "打开链接")
+                            val uri: Uri = Uri.parse(response[0].url)
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                            startActivity(intent)
+                        }
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+        refresh.isRefreshing = false
+    }
+
 
     private fun initView(view: View) {
         toolbar = view.toolbar
@@ -151,6 +219,11 @@ class HomeFragment : Fragment() {
         func6 = view.func6
         func7 = view.func7
         func8 = view.func8
+
+        realTimeInfoContentText = view.realTimeInfoContentText
+        realTimeInfo = view.realTimeInfo
+
+        refresh = view.refresh
 
     }
 

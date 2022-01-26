@@ -13,6 +13,9 @@
         android:theme="@style/Theme.WyDemo"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".InfosInSchoolActivity"
+            android:exported="false" />
+        <activity
             android:name=".MessageActivity"
             android:exported="false" />
         <activity

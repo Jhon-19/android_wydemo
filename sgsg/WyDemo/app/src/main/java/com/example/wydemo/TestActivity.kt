@@ -23,7 +23,7 @@ class TestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test)
 
         testBtn1.setOnClickListener {
-            InformationInSchool.init()
+//            InformationInSchool.init()
         }
 
     }

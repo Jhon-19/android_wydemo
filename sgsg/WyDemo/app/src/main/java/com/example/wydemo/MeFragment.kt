@@ -110,7 +110,7 @@ class MeFragment : Fragment() {
             userInfo.visibility = View.GONE
             exitBtn.visibility = View.GONE
         }
-        if (User.certification) {
+        if (User.certification || (!User.signIn)) {
             proveBtn.visibility = View.GONE
         } else {
             proveBtn.visibility = View.VISIBLE
