@@ -13,8 +13,12 @@
         android:theme="@style/Theme.WyDemo"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".InfosInSchoolActivity"
+            android:name=".LectureActivity"
             android:exported="false" />
+        <activity
+            android:name=".InfosInSchoolActivity"
+            android:exported="false"
+            android:label="校内资讯" />
         <activity
             android:name=".MessageActivity"
             android:exported="false" />

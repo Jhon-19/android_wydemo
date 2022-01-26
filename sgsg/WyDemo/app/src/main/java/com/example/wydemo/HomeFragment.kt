@@ -20,6 +20,7 @@ import com.youth.banner.listener.OnBannerListener
 import kotlinx.android.synthetic.main.home_fragment.view.*
 
 import kotlinx.android.synthetic.main.activity_test.view.*
+import kotlinx.android.synthetic.main.home_fragment.*
 
 
 class HomeFragment : Fragment() {
@@ -44,6 +45,10 @@ class HomeFragment : Fragment() {
     private lateinit var realTimeInfo: TextView
     private lateinit var realTimeInfoContentText: TextView
 
+    private lateinit var lecture: TextView
+    private lateinit var lectureContentTitle: TextView
+    private lateinit var lectureContentTime: TextView
+
     private val schoolList = ArrayList<String>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,27 +59,7 @@ class HomeFragment : Fragment() {
         initView(view)
         initSchools()
 
-        //初始化校内资讯数据
-        InformationInSchool.init(object : InformationInSchoolDataCallBack {
-            override fun onFinish(response: ArrayList<InformationInSchool>) {
-                if (response.size >= 1) {
-                    activity?.runOnUiThread {
-                        realTimeInfoContentText.setText("${response[0].time}  ${response[0].title}")
-                        realTimeInfoContentText.setOnClickListener {
-                            //Log.d("sgsg", "打开链接")
-                            val uri: Uri = Uri.parse(response[0].url)
-                            val intent = Intent(Intent.ACTION_VIEW, uri)
-                            startActivity(intent)
-                        }
-                    }
-                }
-            }
-
-            override fun onError(e: Exception) {
-                e.printStackTrace()
-            }
-
-        })
+        initData()
 
         //下拉刷新
         refresh.setColorSchemeResources(R.color.teal_200)
@@ -137,7 +122,7 @@ class HomeFragment : Fragment() {
         }
         //功能入口
         func1.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, LectureActivity::class.java)
             startActivity(intent)
         }
         func2.setOnClickListener {
@@ -169,14 +154,60 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        //校内资讯
         realTimeInfo.setOnClickListener {
             val intent = Intent(activity, InfosInSchoolActivity::class.java)
+            startActivity(intent)
+        }
+
+        //讲座信息
+        lecture.setOnClickListener {
+            val intent = Intent(activity, LectureActivity::class.java)
             startActivity(intent)
         }
 
         return view
     }
 
+
+    private fun initData() {
+        //初始化校内资讯数据
+        InformationInSchool.init(object : InformationInSchoolDataCallBack {
+            override fun onFinish(response: ArrayList<InformationInSchool>) {
+                if (response.size >= 1) {
+                    activity?.runOnUiThread {
+                        realTimeInfoContentText.setText("${response[0].time}  ${response[0].title}")
+                        realTimeInfoContentText.setOnClickListener {
+                            //Log.d("sgsg", "打开链接")
+                            val uri: Uri = Uri.parse(response[0].url)
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                            startActivity(intent)
+                        }
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+        Lecture.init(object : LectureDataCallBack {
+            override fun onFinish(response: ArrayList<Lecture>) {
+                if (response.size >= 1) {
+                    activity?.runOnUiThread {
+                        lectureContentTime.setText(response[0].time)
+                        lectureContentTitle.setText(response[0].title)
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+    }
 
     private fun refresh() {
         InformationInSchool.init(object : InformationInSchoolDataCallBack {
@@ -190,6 +221,21 @@ class HomeFragment : Fragment() {
                             val intent = Intent(Intent.ACTION_VIEW, uri)
                             startActivity(intent)
                         }
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+        Lecture.init(object : LectureDataCallBack {
+            override fun onFinish(response: ArrayList<Lecture>) {
+                if (response.size >= 1) {
+                    activity?.runOnUiThread {
+                        lectureContentTime.setText(response[0].time)
+                        lectureContentTitle.setText(response[0].title)
                     }
                 }
             }
@@ -222,6 +268,10 @@ class HomeFragment : Fragment() {
 
         realTimeInfoContentText = view.realTimeInfoContentText
         realTimeInfo = view.realTimeInfo
+
+        lecture = view.lecture
+        lectureContentTitle = view.lectureContentTitle
+        lectureContentTime = view.lectureContentTime
 
         refresh = view.refresh
 

@@ -302,9 +302,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/functions"
-            android:textSize="20dp"
             android:layout_margin="3dp"
-            android:text="校内资讯" />
+            android:text="校内资讯"
+            android:textSize="20dp" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/realTimeInfoContent"
@@ -316,10 +316,10 @@
             app:elevation="5dp">
 
             <TextView
-                android:layout_margin="5dp"
                 android:id="@+id/realTimeInfoContentText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -328,24 +328,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/realTimeInfoContent"
-            android:textSize="20dp"
             android:layout_margin="3dp"
-            android:text="讲座信息" />
+            android:text="讲座信息"
+            android:textSize="20dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/lectureContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/lecture" />
+            android:layout_below="@id/lecture"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="4dp"
+            app:elevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/my_lecture" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lectureContentTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lectureContentTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/help"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/lectureContent"
-            android:textSize="20dp"
             android:layout_margin="3dp"
-            android:text="校内互助" />
+            android:text="校内互助"
+            android:textSize="20dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/helpContent"

@@ -1,34 +1,33 @@
 package com.example.wydemo
 
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_infos_in_school.*
+import kotlinx.android.synthetic.main.activity_lecture.*
+import kotlinx.android.synthetic.main.activity_lecture.fab
+import kotlinx.android.synthetic.main.activity_lecture.progressBar
+import kotlinx.android.synthetic.main.activity_lecture.refresh
 
-class InfosInSchoolActivity : AppCompatActivity() {
+class LectureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_infos_in_school)
+        setContentView(R.layout.activity_lecture)
 
         //组件初始化
         progressBar.visibility = View.GONE
         fab.visibility = View.GONE
 
         //页面数据初始化
-        InformationInSchool.init(object : InformationInSchoolDataCallBack {
-            override fun onFinish(data: ArrayList<InformationInSchool>) {
+        Lecture.init(object : LectureDataCallBack {
+            override fun onFinish(data: ArrayList<Lecture>) {
                 runOnUiThread {
                     val layoutManager = LinearLayoutManager(applicationContext)
-                    infosRecyclerView.layoutManager = layoutManager
-                    val adapter = InfosAdapter(data)
-                    infosRecyclerView.adapter = adapter
+                    lectureRecyclerView.layoutManager = layoutManager
+                    val adapter = LectureAdapter(data)
+                    lectureRecyclerView.adapter = adapter
                 }
             }
 
@@ -37,17 +36,17 @@ class InfosInSchoolActivity : AppCompatActivity() {
             }
 
         })
+
         //下拉刷新
         refresh.setColorSchemeResources(R.color.teal_200)
         refresh.setOnRefreshListener {
             refresh()
         }
-
+        //回到顶部
         fab.setOnClickListener {
-            infosRecyclerView.smoothScrollToPosition(0)
+            lectureRecyclerView.smoothScrollToPosition(0)
         }
-        //滑动监听
-        infosRecyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        lectureRecyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager: RecyclerView.LayoutManager? = recyclerView.layoutManager
@@ -62,7 +61,7 @@ class InfosInSchoolActivity : AppCompatActivity() {
                 }
 
                 if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!!
-                    && InformationInSchool.bottom && dy > 0
+                    && Lecture.bottom && dy > 0
                 ) {
                     runOnUiThread {
                         Toast.makeText(applicationContext,
@@ -70,12 +69,12 @@ class InfosInSchoolActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT).show()
                     }
                     return
-                } else if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!! && !InformationInSchool.bottom) {
+                } else if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!! && !Lecture.bottom) {
                     runOnUiThread { progressBar.visibility = View.VISIBLE }
-                    InformationInSchool.append(object : InformationInSchoolDataCallBack {
-                        override fun onFinish(data: ArrayList<InformationInSchool>) {
+                    Lecture.append(object : LectureDataCallBack {
+                        override fun onFinish(data: ArrayList<Lecture>) {
                             runOnUiThread { progressBar.visibility = View.GONE }
-                            if (InformationInSchool.bottom) {
+                            if (Lecture.bottom) {
                                 runOnUiThread {
                                     Toast.makeText(applicationContext,
                                         "到底了",
@@ -94,13 +93,12 @@ class InfosInSchoolActivity : AppCompatActivity() {
 
             }
         })
-
     }
 
     private fun refresh() {
-        InformationInSchool.init(object : InformationInSchoolDataCallBack {
-            override fun onFinish(data: ArrayList<InformationInSchool>) {
-                infosRecyclerView.adapter?.notifyDataSetChanged()
+        Lecture.init(object : LectureDataCallBack {
+            override fun onFinish(data: ArrayList<Lecture>) {
+                lectureRecyclerView.adapter?.notifyDataSetChanged()
             }
 
             override fun onError(e: Exception) {
