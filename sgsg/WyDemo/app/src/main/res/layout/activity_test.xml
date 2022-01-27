@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#f0f7f8"
     tools:context=".TestActivity">
 
     <Button
@@ -19,9 +20,38 @@
         android:layout_height="wrap_content"
         android:text="test2" />
 
-    <com.youth.banner.Banner
-        android:id="@+id/banner"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="160dp" />
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="4dp"
+        app:elevation="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="武汉大学台湾研究所"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/lecture_image" />
+
+        </LinearLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

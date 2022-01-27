@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
     private lateinit var realTimeInfoContentText: TextView
 
     private lateinit var lecture: TextView
+    private lateinit var lectureContent: com.google.android.material.card.MaterialCardView
     private lateinit var lectureContentTitle: TextView
     private lateinit var lectureContentTime: TextView
 
@@ -192,12 +193,21 @@ class HomeFragment : Fragment() {
             }
 
         })
+        //初始化讲座信息
         Lecture.init(object : LectureDataCallBack {
             override fun onFinish(response: ArrayList<Lecture>) {
                 if (response.size >= 1) {
                     activity?.runOnUiThread {
                         lectureContentTime.setText(response[0].time)
                         lectureContentTitle.setText(response[0].title)
+                        lectureContent.setOnClickListener {
+                            val intent =
+                                Intent(context, LectureContentActivity::class.java).apply {
+                                    putExtra("time", response[0].time)
+                                    putExtra("title", response[0].title)
+                                }
+                            startActivity(intent)
+                        }
                     }
                 }
             }
@@ -207,9 +217,12 @@ class HomeFragment : Fragment() {
             }
 
         })
+
     }
 
     private fun refresh() {
+        //涉及刷新标志的消失，把两个请求串起来，虽然耗时长，但是鲁棒
+        //刷新资讯信息
         InformationInSchool.init(object : InformationInSchoolDataCallBack {
             override fun onFinish(response: ArrayList<InformationInSchool>) {
                 if (response.size >= 1) {
@@ -223,21 +236,31 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
-            }
-
-            override fun onError(e: Exception) {
-                e.printStackTrace()
-            }
-
-        })
-        Lecture.init(object : LectureDataCallBack {
-            override fun onFinish(response: ArrayList<Lecture>) {
-                if (response.size >= 1) {
-                    activity?.runOnUiThread {
-                        lectureContentTime.setText(response[0].time)
-                        lectureContentTitle.setText(response[0].title)
+                //刷新讲座信息
+                Lecture.init(object : LectureDataCallBack {
+                    override fun onFinish(response: ArrayList<Lecture>) {
+                        if (response.size >= 1) {
+                            activity?.runOnUiThread {
+                                lectureContentTime.setText(response[0].time)
+                                lectureContentTitle.setText(response[0].title)
+                                lectureContent.setOnClickListener {
+                                    val intent =
+                                        Intent(context, LectureContentActivity::class.java).apply {
+                                            putExtra("time", response[0].time)
+                                            putExtra("title", response[0].title)
+                                        }
+                                    startActivity(intent)
+                                }
+                                refresh.isRefreshing = false
+                            }
+                        }
                     }
-                }
+
+                    override fun onError(e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                })
             }
 
             override fun onError(e: Exception) {
@@ -245,7 +268,6 @@ class HomeFragment : Fragment() {
             }
 
         })
-        refresh.isRefreshing = false
     }
 
 
@@ -270,6 +292,7 @@ class HomeFragment : Fragment() {
         realTimeInfo = view.realTimeInfo
 
         lecture = view.lecture
+        lectureContent = view.lectureContent
         lectureContentTitle = view.lectureContentTitle
         lectureContentTime = view.lectureContentTime
 

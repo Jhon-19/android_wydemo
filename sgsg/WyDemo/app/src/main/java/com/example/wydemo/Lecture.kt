@@ -27,11 +27,13 @@ class Lecture(val time: String, val title: String) {
         fun init(listener: LectureDataCallBack) {
             data.clear()
             args.clear()
+            bottom = false
+            page = 1
             args["page"] = "1"
             args["size"] = pageSize.toString()
             HttpUtil.sendRequestWithOkHttp(relaAddress, args, object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    Log.d("sgsg", "发送请求成功")
+                    //Log.d("sgsg", "发送请求成功")
                     val responseData: String? = response.body()?.string()
                     if (responseData != null) {
                         addData(responseData, listener)
@@ -71,7 +73,7 @@ class Lecture(val time: String, val title: String) {
             try {
                 val jsonObject = JSONObject(responseData)
                 val responseData2 = jsonObject.getString("data")
-                if(responseData2=="[]"){
+                if (responseData2 == "[]") {
                     bottom = true
                     listener.onFinish(data)
                     return

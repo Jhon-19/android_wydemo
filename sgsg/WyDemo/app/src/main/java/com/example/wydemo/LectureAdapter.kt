@@ -26,8 +26,11 @@ class LectureAdapter(val lectureList: List<Lecture>) :
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val lecture = lectureList[position]
-
-            Toast.makeText(view.context, lecture.title, Toast.LENGTH_SHORT).show()
+            val intent = Intent(parent.context, LectureContentActivity::class.java).apply {
+                putExtra("time", lecture.time)
+                putExtra("title", lecture.title)
+            }
+            parent.context.startActivity(intent)
         }
         return viewHolder
     }

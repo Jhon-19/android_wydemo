@@ -37,6 +37,22 @@ class InfosInSchoolActivity : AppCompatActivity() {
             }
 
         })
+        InformationInSchool.append(object : InformationInSchoolDataCallBack {
+            override fun onFinish(response: ArrayList<InformationInSchool>) {
+                if (!InformationInSchool.bottom) {
+                    runOnUiThread {
+                        infosRecyclerView.adapter?.notifyDataSetChanged()
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+
+
         //下拉刷新
         refresh.setColorSchemeResources(R.color.teal_200)
         refresh.setOnRefreshListener {
@@ -60,17 +76,7 @@ class InfosInSchoolActivity : AppCompatActivity() {
                 } else {
                     runOnUiThread { fab.visibility = View.GONE }
                 }
-
-                if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!!
-                    && InformationInSchool.bottom && dy > 0
-                ) {
-                    runOnUiThread {
-                        Toast.makeText(applicationContext,
-                            "到底了",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                } else if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!! && !InformationInSchool.bottom) {
+                if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!! && !InformationInSchool.bottom && dy > 0) {
                     runOnUiThread { progressBar.visibility = View.VISIBLE }
                     InformationInSchool.append(object : InformationInSchoolDataCallBack {
                         override fun onFinish(data: ArrayList<InformationInSchool>) {
@@ -82,7 +88,9 @@ class InfosInSchoolActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT).show()
                                 }
                             } else {
-                                recyclerView.adapter?.notifyDataSetChanged()
+                                runOnUiThread {
+                                    recyclerView.adapter?.notifyDataSetChanged()
+                                }
                             }
                         }
 
@@ -100,14 +108,27 @@ class InfosInSchoolActivity : AppCompatActivity() {
     private fun refresh() {
         InformationInSchool.init(object : InformationInSchoolDataCallBack {
             override fun onFinish(data: ArrayList<InformationInSchool>) {
-                infosRecyclerView.adapter?.notifyDataSetChanged()
+                runOnUiThread { infosRecyclerView.adapter?.notifyDataSetChanged() }
+                InformationInSchool.append(object : InformationInSchoolDataCallBack {
+                    override fun onFinish(response: ArrayList<InformationInSchool>) {
+                        runOnUiThread { refresh.isRefreshing = false }
+                        if (!InformationInSchool.bottom) {
+                            runOnUiThread {
+                                infosRecyclerView.adapter?.notifyDataSetChanged()
+                            }
+                        }
+                    }
+
+                    override fun onError(e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                })
             }
 
             override fun onError(e: Exception) {
                 e.printStackTrace()
             }
-
         })
-        refresh.isRefreshing = false
     }
 }

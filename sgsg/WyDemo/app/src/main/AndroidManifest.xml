@@ -13,6 +13,9 @@
         android:theme="@style/Theme.WyDemo"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LectureContentActivity"
+            android:exported="false" />
+        <activity
             android:name=".LectureActivity"
             android:exported="false" />
         <activity

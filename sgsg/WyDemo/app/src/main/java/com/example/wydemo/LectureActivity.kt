@@ -59,17 +59,7 @@ class LectureActivity : AppCompatActivity() {
                 } else {
                     runOnUiThread { fab.visibility = View.GONE }
                 }
-
-                if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!!
-                    && Lecture.bottom && dy > 0
-                ) {
-                    runOnUiThread {
-                        Toast.makeText(applicationContext,
-                            "到底了",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                } else if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!! && !Lecture.bottom) {
+                if (lastItemPosition >= recyclerView.adapter?.itemCount?.minus(1)!! && !Lecture.bottom && dy > 0) {
                     runOnUiThread { progressBar.visibility = View.VISIBLE }
                     Lecture.append(object : LectureDataCallBack {
                         override fun onFinish(data: ArrayList<Lecture>) {
@@ -81,7 +71,7 @@ class LectureActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT).show()
                                 }
                             } else {
-                                recyclerView.adapter?.notifyDataSetChanged()
+                                runOnUiThread { recyclerView.adapter?.notifyDataSetChanged() }
                             }
                         }
 
@@ -98,7 +88,10 @@ class LectureActivity : AppCompatActivity() {
     private fun refresh() {
         Lecture.init(object : LectureDataCallBack {
             override fun onFinish(data: ArrayList<Lecture>) {
-                lectureRecyclerView.adapter?.notifyDataSetChanged()
+                runOnUiThread {
+                    refresh.isRefreshing = false
+                    lectureRecyclerView.adapter?.notifyDataSetChanged()
+                }
             }
 
             override fun onError(e: Exception) {
@@ -106,6 +99,5 @@ class LectureActivity : AppCompatActivity() {
             }
 
         })
-        refresh.isRefreshing = false
     }
 }

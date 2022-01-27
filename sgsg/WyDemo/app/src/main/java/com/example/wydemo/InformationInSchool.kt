@@ -34,15 +34,17 @@ class InformationInSchool(val time: String, val url: String, val title: String) 
         fun init(listener: InformationInSchoolDataCallBack) {
             data.clear()
             args.clear()
+            bottom = false
+            page = 1
             args["page"] = "1"
             HttpUtil.sendRequestWithOkHttp(relaAddress, args, object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    Log.d("sgsg", "发送请求成功")
                     val responseData: String? = response.body()?.string()
                     if (responseData != null) {
                         addData(responseData, listener)
                     }
                 }
+
                 override fun onFailure(call: Call, e: IOException) {
                     Log.d("sgsg", "发送请求失败")
                     e.printStackTrace()
