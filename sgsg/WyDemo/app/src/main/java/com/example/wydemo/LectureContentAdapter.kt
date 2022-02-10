@@ -39,7 +39,7 @@ class LectureContentAdapter(
         val lectureContent = lectureContentList[position]
         holder.college.setText(lectureContent.college)
         Glide.with(holder.itemView)
-            .load(lectureContent.url)
+            .load("http://"+lectureContent.url)
             .into(holder.image)
     }
 

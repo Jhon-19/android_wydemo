@@ -31,9 +31,6 @@ class TestActivity : AppCompatActivity() {
     private var relaAddress = "/whu/lectureList"
     private val args = HashMap<String, String>()
 
-    //图片放大显示
-    private lateinit var dialog: Dialog
-    private lateinit var image: ImageView
 
     //相机和相册获取图片
     val takePhoto = 1
@@ -45,8 +42,6 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
 
-
-        init()
         testBtn1.setOnClickListener {
             // 创建File对象，用于存储拍照后的图片
             outputImage = File(externalCacheDir, "output_image.jpg")
@@ -125,18 +120,6 @@ class TestActivity : AppCompatActivity() {
             matrix, true)
         bitmap.recycle() // 将不再需要的Bitmap对象回收
         return rotatedBitmap
-    }
-
-
-    private fun init() {
-
-        //展示在dialog上面的大图
-        dialog = Dialog(this, R.style.FullActivity)
-        image = ImageView(this)
-        image.setImageResource(R.drawable.lecture_image)
-        dialog.setContentView(image)
-
-        image.setOnClickListener { dialog.dismiss() }
     }
 
 
