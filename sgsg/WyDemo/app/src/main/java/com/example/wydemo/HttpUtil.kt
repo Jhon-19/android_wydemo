@@ -35,6 +35,7 @@ object HttpUtil {
     }
 }
 
+//行不通
 object HttpUtilOnMainThread {
     private val rootAddress = "http://www.involute.cn:8886/wy"
 

@@ -60,7 +60,7 @@
         <activity
             android:name=".PublishActivity"
             android:exported="false"
-            android:label="PublishActivity" />
+            android:label="发布" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

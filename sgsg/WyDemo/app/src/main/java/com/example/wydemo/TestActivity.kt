@@ -1,29 +1,37 @@
 package com.example.wydemo
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_test.*
-import android.app.Dialog
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
-import android.os.Environment.*
+import android.os.FileUtils
+import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
-import android.widget.ImageView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import kotlinx.android.synthetic.main.activity_test.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.HashMap
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 
 
 class TestActivity : AppCompatActivity() {
@@ -68,6 +76,19 @@ class TestActivity : AppCompatActivity() {
             intent.type = "image/*"
             startActivityForResult(intent, fromAlbum)
         }
+        testBtn3.setOnClickListener {
+            val args = HashMap<String, String>()
+            args["amount"] = "1"
+            args["contactNumber"] = "1"
+            args["content"] = "1"
+            args["gender"] = "1"
+            args["location"] = "1"
+            args["openid"] = "sgsg"
+            args["picture"] = "1"
+            args["tags"] = "tag"
+            args["title"] = "1"
+            Task.createTask("lostProperty", args)
+        }
 
     }
 
@@ -80,15 +101,58 @@ class TestActivity : AppCompatActivity() {
                     val bitmap =
                         BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
                     testImage.setImageBitmap(rotateIfRequired(bitmap))
+                    //压缩图片
+                    val path = outputImage.path
+                    Task.compressPicture(bitmap, path)
+                    //上传图片
+//                    Log.d("sgsg", path)
+                    User.id?.let {
+                        Task.uploadImg(it, path, object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                e.printStackTrace()
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                val responseData: String? = response.body()?.string()
+                                if (responseData != null) {
+                                    Log.d("sgsg", responseData)
+                                }
+                            }
+                        })
+                    }
+
                 }
             }
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     data.data?.let { uri ->
                         // 将选择的图片显示
-                        Log.d("sgsg",uri.toString())
                         val bitmap = getBitmapFromUri(uri)
                         testImage.setImageBitmap(bitmap)
+                        val path = UriUtils.getFileAbsolutePath(this, uri)
+                        if (bitmap != null) {
+                            if (path != null) {
+                                Task.compressPicture(bitmap,path)
+                            }
+                        }
+                        //上传图片
+                        if (path != null) {
+                            User.id?.let {
+                                Task.uploadImg(it, path, object : Callback {
+                                    override fun onFailure(call: Call, e: IOException) {
+                                        e.printStackTrace()
+                                    }
+
+                                    override fun onResponse(call: Call, response: Response) {
+                                        val responseData: String? = response.body()?.string()
+                                        if (responseData != null) {
+                                            Log.d("sgsg", responseData)
+                                        }
+                                    }
+                                })
+                            }
+                        } else Log.d("sgsg", "path_error")
+
                     }
                 }
 
@@ -100,6 +164,7 @@ class TestActivity : AppCompatActivity() {
         .openFileDescriptor(uri, "r")?.use {
             BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
         }
+
 
     private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
         val exif = ExifInterface(outputImage.path)
