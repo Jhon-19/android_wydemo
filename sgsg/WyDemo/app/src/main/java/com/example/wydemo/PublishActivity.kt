@@ -1,6 +1,5 @@
 package com.example.wydemo
 
-import android.R.interpolator.linear
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -12,26 +11,64 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_lecture_content.*
 import kotlinx.android.synthetic.main.activity_publish.*
-import kotlinx.android.synthetic.main.activity_test.*
 import kotlinx.android.synthetic.main.image_dialog.view.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import org.json.JSONObject
 import java.io.IOException
 
 
 class PublishActivity : AppCompatActivity() {
     private lateinit var imgDialog: Dialog
+
+    //图片放大显示
+    private lateinit var dialog: Dialog
+    private lateinit var image: ImageView
+
+    //创建任务请求
     private val args = HashMap<String, String>()
-    private val type:String="lostProperty"
+    private val type: String = "lostProperty"
+
+    //recyclerView的数据
+    private val bitmaps = ArrayList<UploadImage>()
+
+    //上传图片的url列表
+    private val imgUrls = ArrayList<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish)
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
         }
+        init()
+        //展示上传的图片
+        val layoutManager = LinearLayoutManager(applicationContext)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        imgRecyclerView.layoutManager = layoutManager
+        val adapter = UploadImageAdapter(bitmaps, object : OnClickCallback2 {
+            override fun onClick(view: View, position: Int, type: Int) {
+                if (type == 0) {
+                    //放大
+                    image.setImageBitmap(bitmaps[position].bitmap)
+                    dialog.show()
+                } else {
+                    //remove
+                    bitmaps.removeAt(position)
+                    imgUrls.removeAt(position)
+                    imgRecyclerView.adapter?.notifyDataSetChanged()
+                }
+            }
+        })
+        imgRecyclerView.adapter = adapter
+
+        //上传图片按钮
         addImage.setOnClickListener {
             imgDialog = Dialog(this, R.style.JumpDialog)
             val layout = LayoutInflater.from(this)
@@ -70,20 +107,32 @@ class PublishActivity : AppCompatActivity() {
             imgDialog.setCancelable(false)
             imgDialog.show()
         }
+        //选择任务类型
         selectType.setOnClickListener {
             // TODO: 跳转选择界面
         }
+        //发布任务
         publish.setOnClickListener {
             args["amount"] = "1"
             args["contactNumber"] = "1"
-            args["content"] = "1"
+            val content = content.text.toString()
+            if (content == "") {
+                Toast.makeText(this, "创建失败,内容不能为空", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            args["content"] = content
             args["gender"] = "1"
             args["location"] = "1"
-            args["openid"] = "sgsg"
-            args["picture"] = "1"
+            args["openid"] = User.id!!
+            args["picture"] = ","
+            for (i in imgUrls) {
+                args["picture"] = args["picture"] + i + ","
+            }
+            args["picture"]?.let { it1 -> Log.d("sgsg", it1) }
             args["tags"] = "tag"
             args["title"] = "1"
             Task.createTask(type, args)
+            Toast.makeText(this, "创建成功", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -94,9 +143,11 @@ class PublishActivity : AppCompatActivity() {
             getImage.takePhoto -> {
                 if (resultCode == Activity.RESULT_OK) {
                     // 将拍摄的照片显示出来
-                    val bitmap =
+                    var bitmap =
                         BitmapFactory.decodeStream(contentResolver.openInputStream(getImage.imageUri))
-//                    image1.setImageBitmap(rotateIfRequired(bitmap))
+                    bitmap = rotateIfRequired(bitmap)
+                    bitmaps.add(UploadImage(bitmap))
+                    imgRecyclerView.adapter?.notifyDataSetChanged()
                     //压缩图片
                     val path = getImage.outputImage.path
                     Task.compressPicture(bitmap, path)
@@ -111,7 +162,10 @@ class PublishActivity : AppCompatActivity() {
                             override fun onResponse(call: Call, response: Response) {
                                 val responseData: String? = response.body()?.string()
                                 if (responseData != null) {
-                                    Log.d("sgsg", responseData)
+                                    val jsonObj = JSONObject(responseData)
+                                    val url = jsonObj.getString("data")
+                                    Log.d("sgsg", url)
+                                    imgUrls.add(url)
                                 }
                             }
                         })
@@ -123,13 +177,15 @@ class PublishActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     data.data?.let { uri ->
                         // 将选择的图片显示
-                        val bitmap = getBitmapFromUri(uri)
-//                        image1.setImageBitmap(bitmap)
+                        var bitmap = getBitmapFromUri(uri)
+//                        bitmap = rotateIfRequired(bitmap!!)
+                        bitmap?.let { UploadImage(it) }?.let { bitmaps.add(it) }
+                        imgRecyclerView.adapter?.notifyDataSetChanged()
                         val path = UriUtils.getFileAbsolutePath(this, uri)
                         //压缩图片
                         if (bitmap != null) {
                             if (path != null) {
-                                Task.compressPicture(bitmap, path)
+                                Task.compressPicture(bitmap!!, path)
                             }
                         }
                         //上传图片
@@ -143,7 +199,10 @@ class PublishActivity : AppCompatActivity() {
                                     override fun onResponse(call: Call, response: Response) {
                                         val responseData: String? = response.body()?.string()
                                         if (responseData != null) {
-                                            Log.d("sgsg", responseData)
+                                            val jsonObj = JSONObject(responseData)
+                                            val url = jsonObj.getString("data")
+                                            Log.d("sgsg", url)
+                                            imgUrls.add(url)
                                         }
                                     }
                                 })
@@ -189,5 +248,17 @@ class PublishActivity : AppCompatActivity() {
             android.R.id.home -> finish()
         }
         return true
+    }
+
+    //放大
+    private fun init() {
+        //展示在dialog上面的大图
+        dialog = Dialog(this, R.style.FullActivity)
+        image = ImageView(this)
+        //示例图
+        image.setImageResource(R.drawable.lecture_image)
+        dialog.setContentView(image)
+        //点击消失
+        image.setOnClickListener { dialog.dismiss() }
     }
 }

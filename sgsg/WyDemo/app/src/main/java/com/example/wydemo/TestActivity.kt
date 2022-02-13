@@ -35,10 +35,6 @@ import java.io.InputStream
 
 
 class TestActivity : AppCompatActivity() {
-    //网络请求
-    private var relaAddress = "/whu/lectureList"
-    private val args = HashMap<String, String>()
-
 
     //相机和相册获取图片
     val takePhoto = 1
