@@ -9,10 +9,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URISyntaxException
 
-interface UploadListener {
-    fun uploadSuccess()
-    fun uploadFailed(msg: String)
+interface createTaskCallBack {
+    fun onSuccess(response: String)
 }
+
 
 class Task {
     companion object {
@@ -29,20 +29,26 @@ class Task {
                 return types
             }
 
-        fun createTask(type: String, args: HashMap<String, String>) {
+        fun createTask(
+            type: String,
+            args: HashMap<String, String>,
+            listener: createTaskCallBack,
+            arrayArgs: HashMap<String, ArrayList<String>>? = null,
+        ) {
             val relaAddress = "/project/" + type + "/create"
             HttpUtil.sendRequestWithOkHttp(relaAddress, args, object : Callback {
                 override fun onResponse(call: Call, response: Response) {
                     Log.d("sgsg", "发送请求成功")
                     val responseData: String? = response.body()?.string()
                     Log.d("sgsg", responseData.toString())
+                    listener.onSuccess((responseData.toString()))
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
                     Log.d("sgsg", "发送请求失败")
                     e.printStackTrace()
                 }
-            })
+            }, arrayArgs)
         }
 
         /**
@@ -56,7 +62,7 @@ class Task {
          */
         fun compressPicture(bmp: Bitmap, imgPath: String) {
             val file = File(imgPath)
-            Log.d("sgsg",file.length().toString())
+            Log.d("sgsg", file.length().toString())
             val quality = 20
             val baos = ByteArrayOutputStream()
             bmp.compress(Bitmap.CompressFormat.JPEG, quality, baos)
@@ -68,7 +74,7 @@ class Task {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            Log.d("sgsg",file.length().toString())
+            Log.d("sgsg", file.length().toString())
         }
 
         // 上传背景图片的方法

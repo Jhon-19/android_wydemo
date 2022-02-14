@@ -83,7 +83,12 @@ class TestActivity : AppCompatActivity() {
             args["picture"] = "1"
             args["tags"] = "tag"
             args["title"] = "1"
-            Task.createTask("lostProperty", args)
+            Task.createTask("lostProperty", args,object :createTaskCallBack{
+                override fun onSuccess(response: String) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
 
     }

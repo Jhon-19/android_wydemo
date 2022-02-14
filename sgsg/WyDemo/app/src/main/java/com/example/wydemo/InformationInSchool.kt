@@ -1,19 +1,11 @@
 package com.example.wydemo
 
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import android.view.View
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONArray
-import org.w3c.dom.Text
 import java.io.IOException
-import androidx.core.content.ContextCompat.startActivity
 
 interface InformationInSchoolDataCallBack {
     fun onFinish(response: ArrayList<InformationInSchool>)

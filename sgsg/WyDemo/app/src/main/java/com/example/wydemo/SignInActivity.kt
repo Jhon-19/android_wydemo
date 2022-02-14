@@ -2,16 +2,12 @@ package com.example.wydemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.MenuItem
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_set_password.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
-import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.android.synthetic.main.activity_sign_up.account
-import kotlinx.android.synthetic.main.activity_sign_up.signUpBtn
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response

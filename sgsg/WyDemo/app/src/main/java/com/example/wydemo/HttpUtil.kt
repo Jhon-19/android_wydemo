@@ -16,21 +16,23 @@ object HttpUtil {
     fun sendRequestWithOkHttp(
         relaAddress: String,
         args: HashMap<String, String>,
-        callback: okhttp3.Callback,
+        callback: Callback,
+        arrayArgs: HashMap<String, ArrayList<String>>? = null,
     ) {
         val client = OkHttpClient()
-        val request = if (args.size > 0) {
-
-            var requestBodyBuilder = FormBody.Builder()
-            for ((key, value) in args) {
-                requestBodyBuilder.add(key, value)
-            }
-            val requestBody = requestBodyBuilder.build()
-
-            Request.Builder().url(rootAddress + relaAddress).post(requestBody).build()
-        } else {
-            Request.Builder().url(rootAddress + relaAddress).build()
+        var requestBodyBuilder = FormBody.Builder()
+        for ((key, value) in args) {
+            requestBodyBuilder.add(key, value)
         }
+        if (arrayArgs != null) {
+            for ((key, valueArray) in arrayArgs) {
+                for (value in valueArray) {
+                    requestBodyBuilder.add(key, value)
+                }
+            }
+        }
+        val requestBody = requestBodyBuilder.build()
+        val request = Request.Builder().url(rootAddress + relaAddress).post(requestBody).build()
         client.newCall(request).enqueue(callback)
     }
 }

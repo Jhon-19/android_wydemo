@@ -7,7 +7,6 @@ import android.text.method.PasswordTransformationMethod
 import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_set_password.*
-import kotlinx.android.synthetic.main.activity_sign_in.view.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
