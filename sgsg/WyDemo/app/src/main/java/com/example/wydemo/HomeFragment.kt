@@ -127,31 +127,31 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
         func2.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, InfosInSchoolActivity::class.java)
             startActivity(intent)
         }
         func3.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, RewardTaskActivity::class.java)
             startActivity(intent)
         }
         func4.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, RewardTaskActivity::class.java)
             startActivity(intent)
         }
         func5.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, RewardTaskActivity::class.java)
             startActivity(intent)
         }
         func6.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, RewardTaskActivity::class.java)
             startActivity(intent)
         }
         func7.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, RewardTaskActivity::class.java)
             startActivity(intent)
         }
         func8.setOnClickListener {
-            val intent = Intent(activity, TestActivity::class.java)
+            val intent = Intent(activity, RewardTaskActivity::class.java)
             startActivity(intent)
         }
 

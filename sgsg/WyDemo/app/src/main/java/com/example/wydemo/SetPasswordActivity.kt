@@ -86,7 +86,29 @@ class SetPasswordActivity : AppCompatActivity() {
                 if (responseData != null) {
                     //   Log.d("sgsg", responseData)
                     if (parseJSONWithJSONObject(responseData)) {
-                        Thread.sleep(1000)
+                        //登录
+                        args.clear()
+                        args["openid"] = User.id!!
+                        args["password"] = pwd
+                        HttpUtil.sendRequestWithOkHttp("/user/account/login",
+                            args,
+                            object : Callback {
+                                override fun onResponse(call: Call, response: Response) {
+//                        Log.d("sgsg", "发送请求成功")
+                                    val responseData: String? = response.body()?.string()
+                                    if (responseData != null) {
+//                            Log.d("sgsg", responseData)
+                                        if (signin(responseData)) {
+                                            Thread.sleep(1000)
+                                            finish()
+                                        }
+                                    }
+                                }
+
+                                override fun onFailure(call: Call, e: IOException) {
+                                    e.printStackTrace()
+                                }
+                            })
                         finish()
                     }
                 }
@@ -107,6 +129,31 @@ class SetPasswordActivity : AppCompatActivity() {
                 return false
             }
             runOnUiThread { Toast.makeText(applicationContext, "注册成功", Toast.LENGTH_SHORT).show() }
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+    }
+
+    private fun signin(jsonData: String): Boolean {
+        try {
+            val jsonObj = JSONObject(jsonData)
+            if (jsonObj.has("error")) {
+                val msg = jsonObj.getString("message")
+                runOnUiThread { Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show() }
+                return false
+            }
+            User.signIn = true
+            val data = jsonObj.getString("data")
+            val jsonObj2 = JSONObject(data)
+            User.userId = jsonObj2.getString("userId").toInt()
+            User.id = jsonObj2.getString("userOpenid")
+            User.pwd = jsonObj2.getString("userPassword")
+            User.certification = if (jsonObj2.getString("certification") == "1") true else false
+            User.creditLevel = jsonObj2.getString("creditLevel").toInt()
+            User.saveUserDataWithSharedPreferences(applicationContext)
+            runOnUiThread { Toast.makeText(applicationContext, "登录成功", Toast.LENGTH_SHORT).show() }
             return true
         } catch (e: Exception) {
             e.printStackTrace()

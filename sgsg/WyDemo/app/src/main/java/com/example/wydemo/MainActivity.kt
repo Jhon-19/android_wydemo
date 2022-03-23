@@ -21,6 +21,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //初始化User数据
         User.loadUserDataWithSharedPreferences(applicationContext)
+        if (!User.signIn) {
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent)
+        }
         //初始化fragment
         replaceFragment(HomeFragment())
         homeImage.setImageResource(R.drawable.home_clicked)

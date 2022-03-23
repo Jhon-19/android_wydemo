@@ -383,21 +383,5 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/help"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/lectureContent"
-            android:layout_margin="3dp"
-            android:text="校内互助"
-            android:textSize="20dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/helpContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/help" />
-
-
     </RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

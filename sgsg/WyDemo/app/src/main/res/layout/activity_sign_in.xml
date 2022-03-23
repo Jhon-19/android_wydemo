@@ -72,4 +72,12 @@
         android:layout_gravity="center_horizontal"
         android:text="登录" />
 
+    <TextView
+        android:id="@+id/goToSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="未注册？"
+        android:textColor="@color/teal_200" />
+
 </LinearLayout>

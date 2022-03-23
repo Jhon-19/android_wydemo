@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.wydemo">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,6 +13,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WyDemo"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".NotSignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RewardTaskContentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RewardTaskActivity"
+            android:exported="false"
+            android:label="互助任务" />
+        <activity
+            android:name=".TaskActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.wydemo.fileprovider"
@@ -52,11 +65,11 @@
         <activity
             android:name=".SignInActivity"
             android:exported="false"
-            android:label="SignInActivity" />
+            android:label="登录" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
-            android:label="SignUpActivity" />
+            android:label="注册" />
         <activity
             android:name=".PublishActivity"
             android:exported="false"

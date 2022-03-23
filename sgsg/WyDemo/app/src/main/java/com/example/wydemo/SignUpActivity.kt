@@ -38,7 +38,6 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "请输入正确的手机号", Toast.LENGTH_SHORT).show()
             } else {
                 isRegistered(accountInput)
-
             }
         }
         signUpBtn.setOnClickListener {
@@ -48,6 +47,7 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             if (verificationCode == VerificationCode) {
+                this.finish()
                 val intent = Intent(this, SetPasswordActivity::class.java)
                 startActivity(intent)
             } else {

@@ -1,5 +1,6 @@
 package com.example.wydemo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -67,6 +68,13 @@ class SignInActivity : AppCompatActivity() {
                 show = false
             }
         }
+
+        //去注册
+        goToSignUp.setOnClickListener {
+            this.finish()
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -87,7 +95,7 @@ class SignInActivity : AppCompatActivity() {
             User.signIn = true
             val data = jsonObj.getString("data")
             val jsonObj2 = JSONObject(data)
-            User.userId=jsonObj2.getString("userId").toInt()
+            User.userId = jsonObj2.getString("userId").toInt()
             User.id = jsonObj2.getString("userOpenid")
             User.pwd = jsonObj2.getString("userPassword")
             User.certification = if (jsonObj2.getString("certification") == "1") true else false

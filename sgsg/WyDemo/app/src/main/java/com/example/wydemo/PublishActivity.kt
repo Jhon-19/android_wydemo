@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_lecture_content.*
@@ -67,6 +68,18 @@ class PublishActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish)
+
+        if (!User.signIn) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("提示框")
+            builder.setMessage("您还未登录，登录后才能发布任务")
+            builder.setPositiveButton("确定") { dialog, which ->
+                this.finish()
+                val intent = Intent(this, SignInActivity::class.java)
+                startActivity(intent)
+            }
+            builder.show()
+        }
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
         }
@@ -155,7 +168,18 @@ class PublishActivity : AppCompatActivity() {
             if (tagText3 != "") tagList.add(tagText3)
             if (tagList.size == 0) tagList.add("null")
 
-
+            if (!User.signIn) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("提示框")
+                builder.setMessage("您还未登录，登录后才能发布任务")
+                builder.setPositiveButton("确定") { dialog, which ->
+                    this.finish()
+                    val intent = Intent(this, SignInActivity::class.java)
+                    startActivity(intent)
+                }
+                builder.show()
+                return@setOnClickListener
+            }
             val title = titleInput.text.toString()
             if (title == "") {
                 Toast.makeText(this, "创建失败,标题不能为空", Toast.LENGTH_SHORT).show()
@@ -178,7 +202,7 @@ class PublishActivity : AppCompatActivity() {
 
             args["contactNumber"] = contactNumber
             args["content"] = content
-            args["location"] = getNow()
+            args["location"] = getNow()//发布时间
             args["openid"] = User.id!!
             arrayArgs["picture"] = imgUrls
             arrayArgs["tags"] = tagList
@@ -207,6 +231,8 @@ class PublishActivity : AppCompatActivity() {
                                 .show()
                         }
                     }
+                    Thread.sleep(1000)
+                    finish()
                 }
 
             }, arrayArgs)

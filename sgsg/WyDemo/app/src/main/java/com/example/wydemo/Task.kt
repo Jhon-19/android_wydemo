@@ -14,7 +14,14 @@ interface createTaskCallBack {
 }
 
 
-class Task {
+class Task(
+    val title: String,
+    val contactNumber: String,
+    val content: String,
+    val pics: ArrayList<String>,
+    val tags: ArrayList<String>,
+    val time: String,
+) {
     companion object {
         val types: HashMap<String, Int>
             get() {

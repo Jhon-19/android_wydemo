@@ -73,22 +73,7 @@ class TestActivity : AppCompatActivity() {
             startActivityForResult(intent, fromAlbum)
         }
         testBtn3.setOnClickListener {
-            val args = HashMap<String, String>()
-            args["amount"] = "1"
-            args["contactNumber"] = "1"
-            args["content"] = "1"
-            args["gender"] = "1"
-            args["location"] = "1"
-            args["openid"] = "sgsg"
-            args["picture"] = "1"
-            args["tags"] = "tag"
-            args["title"] = "1"
-            Task.createTask("lostProperty", args,object :createTaskCallBack{
-                override fun onSuccess(response: String) {
-                    TODO("Not yet implemented")
-                }
 
-            })
         }
 
     }
@@ -133,7 +118,7 @@ class TestActivity : AppCompatActivity() {
                         val path = UriUtils.getFileAbsolutePath(this, uri)
                         if (bitmap != null) {
                             if (path != null) {
-                                Task.compressPicture(bitmap,path)
+                                Task.compressPicture(bitmap, path)
                             }
                         }
                         //上传图片
